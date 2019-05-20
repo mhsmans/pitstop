@@ -17,3 +17,7 @@ services:
   workshopmanagementapi:
     ports:
       - "5200:5200"
+
+  baggagesetmanagementapi:
+    ports: 
+      - "5001:5001"

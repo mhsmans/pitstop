@@ -25,6 +25,18 @@ services:
       - MSSQL_PID=Developer
       - SA_PASSWORD=8jkGh47hnDw89Haq8LN2
 
+  baggagesqlserver:
+    image: microsoft/mssql-server-linux:latest
+    container_name: baggagesqlserver
+    volumes:
+      - baggagesetdata:/var/opt/mssql 
+    ports:
+      - "1435:1433"
+    environment:
+      - ACCEPT_EULA=Y 
+      - MSSQL_PID=Developer
+      - SA_PASSWORD=8jkGh47hnDw89Haq8LN2
+
   mailserver:
     image: djfarrelly/maildev
     container_name: mailserver
@@ -48,6 +60,17 @@ services:
       - sqlserver
     ports:
       - "5000"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+
+  baggagesetmanagementapi:
+    image: pitstop/baggagesetmanagementapi:latest
+    build: BaggageSetManagementAPI
+    depends_on:
+      - rabbitmq
+      - baggagesqlserver
+    ports:
+      - "5001"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
 
@@ -140,4 +163,6 @@ volumes:
   sqlserverdata:
     external: true    
   rabbitmqdata:
+    external: true
+  baggagesetdata:
     external: true
