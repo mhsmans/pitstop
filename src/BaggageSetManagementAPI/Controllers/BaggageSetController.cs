@@ -68,28 +68,27 @@ namespace Pitstop.Application.BaggageSetManagement.Controllers
         }
 
         [HttpPut]
-        [Route("load/{scheduledFlightId}")]
-        public async Task<IActionResult> LoadBaggageSetOnToFlightAsync(string scheduledFlightId) {
+        [Route("load")]
+        public async Task<IActionResult> LoadBaggageSetOnToFlightAsync([FromBody] LoadBaggageOnFlight command) {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    var baggageSet = await _dbContext.BaggageSets.FirstOrDefaultAsync(b => b.ScheduledFlightId == scheduledFlightId);
+                    var baggageSet = await _dbContext.BaggageSets.FirstOrDefaultAsync(b => b.ScheduledFlightId == command.ScheduledFlightId);
                     if (baggageSet == null)
                     {
-                            return NotFound();
-                    } else {
-                        baggageSet.LoadedOnFlight = true;
-                        _dbContext.Update(baggageSet);
-                        await _dbContext.SaveChangesAsync();
+                        return NotFound();
+                    } 
+                    baggageSet.LoadedOnFlight = true;
+                    _dbContext.Update(baggageSet);
+                    await _dbContext.SaveChangesAsync();
 
-                        // send event
-                        BaggageLoadedOnToFlight e = Mapper.Map<BaggageLoadedOnToFlight>(baggageSet);
-                        await _messagePublisher.PublishMessageAsync(e.MessageType, e , "");
+                    // send event
+                    var e = Mapper.Map<BaggageLoadedOnToFlight>(command);
+                    await _messagePublisher.PublishMessageAsync(e.MessageType, e, "");
 
-                        // return result
-                        return Ok(baggageSet);
-                    }
+                    // return result
+                    return Ok(baggageSet);
                 }
                 return BadRequest();
             }
@@ -103,28 +102,27 @@ namespace Pitstop.Application.BaggageSetManagement.Controllers
         }
 
         [HttpPut]
-        [Route("deliver/{scheduledFlightId}")]
-        public async Task<IActionResult> DeliverBaggageToBaggageClaimAsync(string scheduledFlightId) {
+        [Route("deliver")]
+        public async Task<IActionResult> DeliverBaggageToBaggageClaimAsync([FromBody] DeliverBaggageToBaggageClaim command) {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    var baggageSet = await _dbContext.BaggageSets.FirstOrDefaultAsync(b => b.ScheduledFlightId == scheduledFlightId);
+                    var baggageSet = await _dbContext.BaggageSets.FirstOrDefaultAsync(b => b.ScheduledFlightId == command.ScheduledFlightId);
                     if (baggageSet == null)
                     {
                         return NotFound();
-                    } else {
-                        baggageSet.DeliveredToBaggageClaim = true;
-                        _dbContext.Update(baggageSet);
-                        await _dbContext.SaveChangesAsync();
+                    } 
+                    baggageSet.DeliveredToBaggageClaim = true;
+                    _dbContext.Update(baggageSet);
+                    await _dbContext.SaveChangesAsync();
 
-                        // send event
-                        BaggageDeliveredToBaggageClaim e = Mapper.Map<BaggageDeliveredToBaggageClaim>(baggageSet);
-                        await _messagePublisher.PublishMessageAsync(e.MessageType, e , "");
+                    // send event
+                    var e = Mapper.Map<BaggageDeliveredToBaggageClaim>(command);
+                    await _messagePublisher.PublishMessageAsync(e.MessageType, e , "");
  
-                        // return result
-                        return Ok(baggageSet);
-                    }
+                    // return result
+                    return Ok(baggageSet);
                 }
                 return BadRequest();
             }

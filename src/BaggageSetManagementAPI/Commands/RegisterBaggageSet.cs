@@ -9,11 +9,16 @@ namespace Pitstop.Application.BaggageSetManagement.Commands
     {
         public readonly string ScheduledFlightId;
         public readonly string BaggageClaimId;
+        public readonly Boolean LoadedOnToFlight;
+        public readonly Boolean DeliveredToBaggageClaim;
 
-        public RegisterBaggageSet(Guid messageId, string scheduledFlightId, string baggageClaimId) : base(messageId)
+        public RegisterBaggageSet(Guid messageId, string scheduledFlightId, string baggageClaimId, Boolean loadedOnToFlight,
+        Boolean deliveredToBaggageClaim) : base(messageId)
         {
             ScheduledFlightId = scheduledFlightId;
             BaggageClaimId = baggageClaimId;
+            LoadedOnToFlight = loadedOnToFlight;
+            DeliveredToBaggageClaim = deliveredToBaggageClaim;
         }
     }
 }

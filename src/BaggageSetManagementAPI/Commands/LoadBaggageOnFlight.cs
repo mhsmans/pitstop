@@ -3,13 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Pitstop.Application.BaggageSetManagement.Events
+namespace Pitstop.Application.BaggageSetManagement.Commands
 {
-    public class BaggageDeliveredToBaggageClaim : Event
+    public class LoadBaggageOnFlight : Command
     {
         public readonly string ScheduledFlightId;
 
-        public BaggageDeliveredToBaggageClaim(Guid messageId, string scheduledFlightId) : base(messageId)
+        public LoadBaggageOnFlight(Guid messageId, string scheduledFlightId) : base(messageId)
         {
             ScheduledFlightId = scheduledFlightId;
         }

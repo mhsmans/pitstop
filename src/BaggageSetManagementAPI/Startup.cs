@@ -94,7 +94,13 @@ namespace Pitstop.Application.BaggageSetManagement
             Mapper.Initialize(cfg =>
             {
                 cfg.CreateMap<RegisterBaggageSet, BaggageSet>();
-                cfg.CreateMap<RegisterBaggageSet, BaggageLoadedOnToFlight>()
+                cfg.CreateMap<RegisterBaggageSet, BaggageSetRegistered>()
+                    .ForCtorParam("messageId", opt => opt.MapFrom(c => Guid.NewGuid()));
+                cfg.CreateMap<LoadBaggageOnFlight, BaggageSet>();
+                cfg.CreateMap<LoadBaggageOnFlight, BaggageLoadedOnToFlight>()
+                    .ForCtorParam("messageId", opt => opt.MapFrom(c => Guid.NewGuid()));
+                cfg.CreateMap<DeliverBaggageToBaggageClaim, BaggageSet>();
+                cfg.CreateMap<DeliverBaggageToBaggageClaim, BaggageDeliveredToBaggageClaim>()
                     .ForCtorParam("messageId", opt => opt.MapFrom(c => Guid.NewGuid()));
             });
         }
