@@ -25,9 +25,9 @@ services:
       - MSSQL_PID=Developer
       - SA_PASSWORD=8jkGh47hnDw89Haq8LN2
 
-  baggagesqlserver:
+  sqlserverbaggage:
     image: microsoft/mssql-server-linux:latest
-    container_name: baggagesqlserver
+    container_name: sqlserverbaggage
     volumes:
       - baggagesetdata:/var/opt/mssql 
     ports:
@@ -68,7 +68,7 @@ services:
     build: BaggageSetManagementAPI
     depends_on:
       - rabbitmq
-      - baggagesqlserver
+      - sqlserverbaggage
     ports:
       - "5001"
     environment:
